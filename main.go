@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 
@@ -23,9 +24,8 @@ func main() {
 		log.Fatalf("GOOGLE_DOMAIN is not set")
 	}
 
-	// config := &config.Config{
-	// 	DatabaseURL: DatabaseURL,
-	// }
+	customFieldMask := os.Getenv("GOOGLE_CUSTOM_FIELD_MASK")
+	fmt.Printf("Using custom field mask: %s\n", customFieldMask)
 
 	credentials, err := os.ReadFile("credentials.json")
 	if err != nil {
@@ -38,7 +38,7 @@ func main() {
 	}
 	userService := google.NewUserService(googleAdminService, domain)
 
-	err = userService.ListAllUsers(ctx)
+	err = userService.ListAllUsers(ctx, customFieldMask)
 	if err != nil {
 		log.Fatalf("Error listing users: %v", err)
 	}
