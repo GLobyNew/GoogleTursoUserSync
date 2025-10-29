@@ -13,9 +13,14 @@ func main() {
 	ctx := context.Background()
 	godotenv.Load()
 
-	DatabaseURL := os.Getenv("DATABASE_URL")
-	if DatabaseURL == "" {
+	databaseURL := os.Getenv("DATABASE_URL")
+	if databaseURL == "" {
 		log.Fatalf("DATABASE_URL is not set")
+	}
+
+	domain := os.Getenv("GOOGLE_DOMAIN")
+	if domain == "" {
+		log.Fatalf("GOOGLE_DOMAIN is not set")
 	}
 
 	// config := &config.Config{
@@ -31,7 +36,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Unable to retrieve Google Admin service: %v", err)
 	}
-	userService := google.NewUserService(googleAdminService)
+	userService := google.NewUserService(googleAdminService, domain)
 
 	err = userService.ListAllUsers(ctx)
 	if err != nil {

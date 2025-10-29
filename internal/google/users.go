@@ -10,17 +10,18 @@ import (
 
 type UserService struct {
 	adminSrv *admin.Service
+	domain   string
 }
 
-func NewUserService(adminSrv *admin.Service) *UserService {
+func NewUserService(adminSrv *admin.Service, domain string) *UserService {
 	return &UserService{
 		adminSrv: adminSrv,
+		domain:   domain,
 	}
 }
 
 func (u *UserService) GetAllUsers(ctx context.Context) ([]*admin.User, error) {
-	r, err := u.adminSrv.Users.List().Customer("my_customer").
-		OrderBy("email").Do()
+	r, err := u.adminSrv.Users.List().Domain(u.domain).OrderBy("email").Do()
 	if err != nil {
 		log.Fatalf("Unable to retrieve users in domain: %v", err)
 	}
