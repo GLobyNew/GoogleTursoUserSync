@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/GLobyNew/GoogleTursoUserSync/internal/database"
 	google "github.com/GLobyNew/GoogleTursoUserSync/internal/google"
 	"github.com/joho/godotenv"
 )
@@ -37,10 +38,27 @@ func main() {
 		log.Fatalf("Unable to retrieve Google Admin service: %v", err)
 	}
 	userService := google.NewUserService(googleAdminService, domain)
-
-	err = userService.PrintAllUsers(ctx, customFieldMask)
+	googleUsers, err := userService.GetAllUsers(ctx, customFieldMask)
 	if err != nil {
-		log.Fatalf("Error listing users: %v", err)
+		log.Fatalf("Error getting all users: %v", err)
 	}
+
+	db, err := database.NewDatabaseConnection(databaseURL)
+	if err != nil {
+		log.Fatalf("Error connecting to database: %v", err)
+	}
+	defer db.Close()
+	log.Printf("Successfully connected to database.\n")
+
+	tursoUsers, err := db.GetAllUsers()
+	if err != nil {
+		log.Fatalf("Error retrieving users from database: %v", err)
+	}
+
+	log.Printf("Total users retrieved from Google: %d\n", len(googleUsers))
+	log.Printf("Total users retrieved from Turso database: %d\n", len(tursoUsers))
+
+	updated, cretaed, upToDate := db.SyncUsers(googleUsers, tursoUsers)
+	log.Printf("Sync complete. Updated: %d, Created: %d, Up-to-date: %d\n", updated, cretaed, upToDate)
 
 }

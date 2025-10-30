@@ -11,7 +11,7 @@ import (
 
 type GoogleUser struct {
 	PrimaryEmail string
-	tgID         int64
+	TgID         int64
 }
 
 type UserService struct {
@@ -75,7 +75,7 @@ func (u *UserService) GetAllUsers(ctx context.Context, customFieldMask string) (
 		}
 		googleUsers[i] = GoogleUser{
 			PrimaryEmail: user.PrimaryEmail,
-			tgID:         tgID,
+			TgID:         tgID,
 		}
 	}
 
@@ -92,7 +92,7 @@ func (u *UserService) PrintAllUsers(ctx context.Context, customFieldMask string)
 	} else {
 		fmt.Print("Users:\n")
 		for _, u := range users {
-			fmt.Printf("%v (%v)\n", u.PrimaryEmail, u.tgID)
+			fmt.Printf("%v (%v)\n", u.PrimaryEmail, u.TgID)
 		}
 	}
 	return nil
@@ -109,7 +109,7 @@ func (u *UserService) PrintAllUsersWithoutTgID(ctx context.Context, customFieldM
 	} else {
 		fmt.Print("Users without tgID:\n")
 		for _, u := range users {
-			if u.tgID == 0 {
+			if u.TgID == 0 {
 				fmt.Printf("%v\n", u.PrimaryEmail)
 			}
 		}
