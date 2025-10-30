@@ -38,7 +38,7 @@ func main() {
 	}
 	userService := google.NewUserService(googleAdminService, domain)
 
-	err = userService.ListAllUsers(ctx, customFieldMask)
+	err = userService.PrintAllUsers(ctx, customFieldMask)
 	if err != nil {
 		log.Fatalf("Error listing users: %v", err)
 	}

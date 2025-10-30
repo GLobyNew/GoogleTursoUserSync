@@ -138,3 +138,28 @@ func TestGetAllUsers(t *testing.T) {
 	}
 
 }
+
+func TestPrintAllUsersWithoutTgID(t *testing.T) {
+	godotenv.Load()
+	credentials, err := os.ReadFile("test-credentials.json")
+	if err != nil {
+		t.Fatalf("Unable to read client secret file: %v", err)
+	}
+	domain := os.Getenv("GOOGLE_TEST_DOMAIN")
+	if domain == "" {
+		t.Fatalf("GOOGLE_TEST_DOMAIN is not set")
+	}
+	t.Logf("\n")
+
+	googleAdminService, err := newTestGoogleAdminService(context.Background(), credentials)
+	if err != nil {
+		t.Fatalf("Unable to retrieve Google Admin service: %v", err)
+	}
+	userService := NewUserService(googleAdminService, domain)
+
+	err = userService.PrintAllUsersWithoutTgID(context.Background(), "MessengerInfo")
+	if err != nil {
+		t.Fatalf("Error printing all users without tgID: %v", err)
+	}
+
+}

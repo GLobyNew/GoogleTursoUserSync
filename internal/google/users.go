@@ -71,7 +71,7 @@ func (u *UserService) GetAllUsers(ctx context.Context, customFieldMask string) (
 	for i, user := range r.Users {
 		tgID, err := parseTgIDFromUser(user)
 		if err != nil {
-			log.Printf("Error parsing tgID for user %s: %v", user.PrimaryEmail, err)
+			tgID = 0
 		}
 		googleUsers[i] = GoogleUser{
 			PrimaryEmail: user.PrimaryEmail,
@@ -82,7 +82,7 @@ func (u *UserService) GetAllUsers(ctx context.Context, customFieldMask string) (
 	return googleUsers, nil
 }
 
-func (u *UserService) ListAllUsers(ctx context.Context, customFieldMask string) error {
+func (u *UserService) PrintAllUsers(ctx context.Context, customFieldMask string) error {
 	users, err := u.GetAllUsers(ctx, customFieldMask)
 	if err != nil {
 		return err
@@ -97,4 +97,22 @@ func (u *UserService) ListAllUsers(ctx context.Context, customFieldMask string) 
 	}
 	return nil
 
+}
+
+func (u *UserService) PrintAllUsersWithoutTgID(ctx context.Context, customFieldMask string) error {
+	users, err := u.GetAllUsers(ctx, customFieldMask)
+	if err != nil {
+		return err
+	}
+	if len(users) == 0 {
+		fmt.Print("No users found.\n")
+	} else {
+		fmt.Print("Users without tgID:\n")
+		for _, u := range users {
+			if u.tgID == 0 {
+				fmt.Printf("%v\n", u.PrimaryEmail)
+			}
+		}
+	}
+	return nil
 }
