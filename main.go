@@ -58,7 +58,7 @@ func main() {
 	log.Printf("Total users retrieved from Google: %d\n", len(googleUsers))
 	log.Printf("Total users retrieved from Turso database: %d\n", len(tursoUsers))
 
-	updated, cretaed, upToDate := db.SyncUsers(googleUsers, tursoUsers)
-	log.Printf("Sync complete. Updated: %d, Created: %d, Up-to-date: %d\n", updated, cretaed, upToDate)
+	updated, created, upToDate := db.SyncUsers(googleUsers, tursoUsers)
+	log.Printf("Sync complete. Updated: %d, Created: %d, Up-to-date: %d\n", updated, created, upToDate)
 
 }
