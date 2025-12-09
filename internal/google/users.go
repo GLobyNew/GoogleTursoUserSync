@@ -44,13 +44,13 @@ func parseTgIDFromUser(user *admin.User) (int64, error) {
 	}
 	mesInfo, err := user.CustomSchemas["MessengerInfo"].MarshalJSON()
 	if err != nil {
-		return 0, fmt.Errorf("Error marshaling MessengerInfo: %v", err)
+		return 0, fmt.Errorf("error marshaling MessengerInfo: %v", err)
 	}
 
 	var cusFields CustomFieldsTgID
 	err = json.Unmarshal(mesInfo, &cusFields)
 	if err != nil {
-		return 0, fmt.Errorf("Error unmarshaling MessengerInfo: %v", err)
+		return 0, fmt.Errorf("error unmarshaling MessengerInfo: %v", err)
 	}
 	return cusFields.TgID, nil
 }
